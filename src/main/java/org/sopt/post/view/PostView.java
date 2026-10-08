@@ -60,6 +60,9 @@ public class PostView {
         }
         System.out.print("카테고리 선택 : ");
         int number = Integer.parseInt(scanner.nextLine());
+        if(number < 1 || number > Category.values().length) {
+            throw new IllegalArgumentException("올바른 카테고리 번호를 입력해주세요.");
+        }
         return Category.values()[number - 1];
     }
 
@@ -79,7 +82,7 @@ public class PostView {
         System.out.println("\n=== 게시글 ===");
         System.out.println("제목: " + post.getTitle());
         System.out.println("콘텐츠: " + post.getContent());
-        System.out.println("카테고리: " + post.getCategory());
+        System.out.println("카테고리: " + post.getCategory().getLabel());
         System.out.println("작성자: " + post.getAuthor());
         System.out.println("작성일: " + post.getCreatedAt());
     }
