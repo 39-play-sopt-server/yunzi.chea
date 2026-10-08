@@ -48,7 +48,7 @@ public class Main {
                     default:
                         view.printMessage("잘못된 입력입니다.");
                 }
-            } catch (PostNotFoundException e) {
+            } catch (PostNotFoundException | IllegalArgumentException e) {
                 view.printMessage(e.getMessage());
             }
         }

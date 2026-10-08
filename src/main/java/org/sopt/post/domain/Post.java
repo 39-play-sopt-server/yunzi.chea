@@ -11,6 +11,10 @@ public class Post {
     final private LocalDateTime createdAt ;
 
     public Post(Long id, String title, String content, Category category, String author) {
+
+        validateNotBlank(title, "제목");
+        validateNotBlank(content, "내용");
+
         this.title = title;
         this.content = content;
         this.category = category;
@@ -28,10 +32,13 @@ public class Post {
     }
 
     public void updateTitle(String title) {
+        validateNotBlank(title, "제목");
         this.title = title;
     }
 
     public void updateContent(String content) {
+
+        validateNotBlank(content, "내용");
         this.content = content;
     }
 
@@ -49,5 +56,11 @@ public class Post {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    private void validateNotBlank(String value, String fieldName) {
+        if(value == null || value.isBlank()){
+            throw new IllegalArgumentException(fieldName + "은(는) 비어있을 수 없습니다.");
+        }
     }
 }
