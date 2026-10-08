@@ -2,6 +2,7 @@ package org.sopt.post.service;
 
 import org.sopt.post.domain.Category;
 import org.sopt.post.domain.Post;
+import org.sopt.post.exception.PostNotFoundException;
 import org.sopt.post.repository.PostRepository;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class PostService {
     }
 
     public Post getPost (Long id) {
-        return postRepository.findById(id).orElseThrow(() ->new IllegalArgumentException("존재하지 않는 게시글입니다."));
+        return postRepository.findById(id).orElseThrow(() ->new PostNotFoundException());
     }
 
     public void updatePost (Long id, String title, String content) {
