@@ -19,7 +19,7 @@ jobs:
           GH_REPO: ${{ github.repository }}
           NUMBER: ${{ github.event.pull_request.number }}
           AUTHOR: ${{ github.event.pull_request.user.login }}
-          REVIEWERS: Kyoung-M1N sssthnnhee leseok mindolii KateteDeveloper
+          REVIEWERS: SungKong00 Kyoung-M1N sssthnnhee leseok mindolii
         run: |
           for reviewer in $REVIEWERS; do
             # PR 작성자 본인은 리뷰어로 지정할 수 없으므로 건너뜀
