@@ -1,4 +1,7 @@
-package org.sopt.post;
+package org.sopt.post.view;
+
+import org.sopt.post.domain.Category;
+import org.sopt.post.domain.Post;
 
 import java.util.List;
 import java.util.Scanner;
@@ -36,14 +39,28 @@ public class PostView {
         return scanner.nextLine();
     }
 
+    public String inputAuthor() {
+        System.out.print("작성자: ");
+        return scanner.nextLine();
+    }
+
     public String inputNewContent() {
         System.out.print("새로운 내용: ");
         return scanner.nextLine();
     }
 
-    public int inputIndex(String message) {
+    public Long inputIndex(String message) {
         System.out.print(message);
-        return Integer.parseInt(scanner.nextLine()) - 1;
+        return Long.parseLong(scanner.nextLine());
+    }
+
+    public Category inputCategory() {
+        for(int i = 0; i < Category.values().length; i++) {
+            System.out.println((i + 1) + ". " + Category.values()[i].getLabel());
+        }
+        System.out.print("카테고리 선택 : ");
+        int number = Integer.parseInt(scanner.nextLine());
+        return Category.values()[number - 1];
     }
 
     public void printMessage(String message) {
@@ -54,13 +71,16 @@ public class PostView {
         System.out.println("\n=== 게시글 목록 ===");
 
         for (int i = 0; i < posts.size(); i++) {
-            System.out.println((i + 1) + ". " + posts.get(i).getTitle());
+            System.out.println(posts.get(i).getId() + ". " + posts.get(i).getTitle());
         }
     }
 
     public void printPost(Post post) {
         System.out.println("\n=== 게시글 ===");
         System.out.println("제목: " + post.getTitle());
-        System.out.println("내용: " + post.getContent());
+        System.out.println("콘텐츠: " + post.getContent());
+        System.out.println("카테고리: " + post.getCategory());
+        System.out.println("작성자: " + post.getAuthor());
+        System.out.println("작성일: " + post.getCreatedAt());
     }
 }
