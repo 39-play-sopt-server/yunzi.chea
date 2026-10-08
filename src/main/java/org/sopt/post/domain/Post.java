@@ -3,12 +3,12 @@ package org.sopt.post.domain;
 import java.time.LocalDateTime;
 
 public class Post {
-    final private Long id;
+    private final Long id;
     private String title;
     private String content;
-    final private Category category;
-    final private String author;
-    final private LocalDateTime createdAt ;
+    private final Category category;
+    private final String author;
+    private final LocalDateTime createdAt;
 
     public Post(Long id, String title, String content, Category category, String author) {
 
