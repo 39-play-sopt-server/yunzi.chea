@@ -36,6 +36,14 @@ public class Post {
         this.title = title;
     }
 
+    public void update(String title, String content) {
+        validateNotBlank(title, "제목");
+        validateNotBlank(content,"내용");
+
+        this.title = title;
+        this.content = content;
+    }
+
     public void updateContent(String content) {
 
         validateNotBlank(content, "내용");

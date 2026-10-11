@@ -28,8 +28,7 @@ public class PostService {
 
     public void updatePost (Long id, String title, String content) {
         Post post = getPost(id);
-        post.updateTitle(title);
-        post.updateContent(content);
+        post.update(title, content);
     }
 
     public void deletePost(Long id) {
