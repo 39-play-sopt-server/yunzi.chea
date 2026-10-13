@@ -26,7 +26,7 @@ public class PostController {
         postView.printMessage("게시글이 작성되었습니다.");
     }
 
-    public void checkPostList() {
+    public void getPostList() {
         List<Post> postList = postService.getAllPosts();
         if(postList.isEmpty()) {
             postView.printMessage("게시글이 없습니다.");
@@ -35,7 +35,7 @@ public class PostController {
         }
     }
 
-    public void checkPost() {
+    public void getPost() {
 
         Long id = postView.inputIndex("조회할 게시글 번호: ");
         Post post = postService.getPost(id);
