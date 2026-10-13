@@ -26,11 +26,11 @@ public class Main {
                         break;
 
                     case 2:
-                        controller.checkPostList();
+                        controller.getPostList();
                         break;
 
                     case 3:
-                        controller.checkPost();
+                        controller.getPost();
                         break;
 
                     case 4:
