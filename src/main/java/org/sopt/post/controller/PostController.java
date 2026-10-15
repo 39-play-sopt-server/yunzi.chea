@@ -1,58 +1,77 @@
 package org.sopt.post.controller;
 
-import org.sopt.post.domain.Category;
 import org.sopt.post.domain.Post;
+import org.sopt.post.dto.ApiResponse;
+import org.sopt.post.dto.CreatePostRequest;
+import org.sopt.post.dto.PostResponse;
+import org.sopt.post.dto.UpdatePostRequest;
 import org.sopt.post.service.PostService;
-import org.sopt.post.view.PostView;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@RestController
+@RequestMapping(path = "/api/v1/posts")
 public class PostController {
-    private final PostView postView;
     private final PostService postService;
 
-    public PostController(PostView view,PostService postService) {
-        this.postView = view;
+    public PostController(PostService postService) {
         this.postService = postService;
     }
 
-    public void createPost() {
-        String title = postView.inputTitle();
-        String content = postView.inputContent();
-        String author = postView.inputAuthor();
-        Category category = postView.inputCategory();
-
-        postService.createPost(title, content,category,author);
-        postView.printMessage("게시글이 작성되었습니다.");
+    @PostMapping
+    public ResponseEntity<ApiResponse<PostResponse>> createPost(
+            @RequestBody CreatePostRequest request
+    ) {
+        Post post = postService.createPost(
+                request.title(), request.content(), request.category(), request.author());
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(ApiResponse.of("게시글이 작성되었습니다.", PostResponse.from(post)));
     }
 
-    public void getPostList() {
-        List<Post> postList = postService.getAllPosts();
-        if(postList.isEmpty()) {
-            postView.printMessage("게시글이 없습니다.");
-        } else {
-            postView.printPostList(postList);
-        }
+    @GetMapping
+    public ApiResponse<List<PostResponse>> getPostList() {
+        List<PostResponse> posts = postService.getAllPosts().stream()
+                .map(PostResponse::from)
+                .toList();
+        return ApiResponse.of("게시글 목록 조회 성공", posts);
     }
 
-    public void getPost() {
-
-        Long id = postView.inputIndex("조회할 게시글 번호: ");
-        Post post = postService.getPost(id);
-        postView.printPost(post);
+    @GetMapping(path = "/{postId}")
+    public ApiResponse<PostResponse> getPost(
+            @PathVariable(name = "postId") Long postId
+    ) {
+        Post post = postService.getPost(postId);
+        return ApiResponse.of("게시글 조회 성공", PostResponse.from(post));
     }
 
-    public void updatePost() {
-        Long id = postView.inputIndex("수정할 게시글 번호: ");
-        String newTitle = postView.inputNewTitle();
-        String newContent = postView.inputNewContent();
-        postService.updatePost(id, newTitle, newContent);
-        postView.printMessage("게시글이 수정되었습니다.");
+    @PutMapping(path = "/{postId}")
+    public ApiResponse<PostResponse> updatePost(
+            @PathVariable(name = "postId") Long postId,
+            @RequestBody UpdatePostRequest request
+    ) {
+        postService.updatePost(postId, request.title(), request.content());
+        Post post = postService.getPost(postId);
+        return ApiResponse.of("게시글이 수정되었습니다.", PostResponse.from(post));
     }
 
-    public void deletePost() {
-        Long id = postView.inputIndex("삭제할 게시글 번호: ");
-        postService.deletePost(id);
-        postView.printMessage("게시글이 삭제되었습니다.");
+    @DeleteMapping(path = "/{postId}")
+    public ResponseEntity<ApiResponse<Void>> deletePost(
+            @PathVariable(name = "postId") Long postId
+    ) {
+        postService.deletePost(postId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponse.of("삭제 완료"));
     }
 }
