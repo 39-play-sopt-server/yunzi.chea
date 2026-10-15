@@ -36,7 +36,7 @@ public class PostController {
                 request.title(), request.content(), request.category(), request.author());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(ApiResponse.of("게시글이 작성되었습니다.", PostResponse.from(post)));
+                .body(ApiResponse.success(HttpStatus.CREATED, "게시글이 작성되었습니다.", PostResponse.from(post)));
     }
 
     @GetMapping
@@ -44,15 +44,15 @@ public class PostController {
         List<PostResponse> posts = postService.getAllPosts().stream()
                 .map(PostResponse::from)
                 .toList();
-        return ApiResponse.of("게시글 목록 조회 성공", posts);
+        return ApiResponse.success(HttpStatus.OK,"게시글 목록 조회 성공", posts);
     }
 
     @GetMapping(path = "/{postId}")
     public ApiResponse<PostResponse> getPost(
             @PathVariable(name = "postId") Long postId
     ) {
-        Post post = postService.getPost(postId);
-        return ApiResponse.of("게시글 조회 성공", PostResponse.from(post));
+        Post post = postService.readPost(postId);
+        return ApiResponse.success(HttpStatus.OK,"게시글 조회 성공", PostResponse.from(post));
     }
 
     @PutMapping(path = "/{postId}")
@@ -62,7 +62,7 @@ public class PostController {
     ) {
         postService.updatePost(postId, request.title(), request.content());
         Post post = postService.getPost(postId);
-        return ApiResponse.of("게시글이 수정되었습니다.", PostResponse.from(post));
+        return ApiResponse.success(HttpStatus.OK,"게시글이 수정되었습니다.", PostResponse.from(post));
     }
 
     @DeleteMapping(path = "/{postId}")
@@ -72,6 +72,6 @@ public class PostController {
         postService.deletePost(postId);
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(ApiResponse.of("삭제 완료"));
+                .body(ApiResponse.success(HttpStatus.OK,"삭제 완료",null));
     }
 }

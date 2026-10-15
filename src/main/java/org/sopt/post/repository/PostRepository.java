@@ -2,6 +2,7 @@ package org.sopt.post.repository;
 
 import org.sopt.post.domain.Category;
 import org.sopt.post.domain.Post;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@Repository
 public class PostRepository {
 
     // 게시글을 담기.
