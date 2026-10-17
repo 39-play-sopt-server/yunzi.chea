@@ -2,6 +2,7 @@ package org.sopt.post.repository;
 
 import org.sopt.post.domain.Category;
 import org.sopt.post.domain.Post;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -11,20 +12,25 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class PostRepository {
+public interface PostRepository extends JpaRepository<Post, Long> {
+
+    Optional<Post> findById(Long id);
+    List<Post> findAll();
+
+    void deleteById(Long id);
 
     // 게시글을 담기.
-    private final Map<Long,Post> posts = new LinkedHashMap<>();
-    private long nextId = 0;
+    // private final Map<Long,Post> posts = new LinkedHashMap<>();
+    // private long nextId = 0;
 
-    public Post save(String title, String content, Category category, String author) {
+    /*public Post save(String title, String content, Category category, String author) {
         nextId++;
         Post nextPost = new Post(nextId,title, content, category, author);
         posts.put(nextId,nextPost);
         return nextPost;
-    }
+    }*/
 
-    public Optional<Post> findById(Long id) {
+    /*public Optional<Post> findById(Long id) {
         return Optional.ofNullable(posts.get(id));
     }
 
@@ -34,5 +40,5 @@ public class PostRepository {
 
     public void deleteById(Long id) {
         posts.remove(id);
-    }
+    }*/
 }
