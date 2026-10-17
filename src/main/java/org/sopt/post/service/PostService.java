@@ -4,9 +4,11 @@ import org.sopt.post.domain.Category;
 import org.sopt.post.domain.Post;
 import org.sopt.post.exception.PostNotFoundException;
 import org.sopt.post.repository.PostRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
 public class PostService {
     private final PostRepository postRepository;
 
@@ -34,5 +36,10 @@ public class PostService {
     public void deletePost(Long id) {
         getPost(id);
         postRepository.deleteById(id);
+    }
+    public Post readPost(Long id) {
+        Post post = getPost(id);
+        post.increaseViewCount();
+        return post;
     }
 }

@@ -1,5 +1,7 @@
 package org.sopt.post.domain;
 
+import org.sopt.post.exception.InvalidPostException;
+
 import java.time.LocalDateTime;
 
 public class Post {
@@ -9,6 +11,7 @@ public class Post {
     private final Category category;
     private final String author;
     private final LocalDateTime createdAt;
+    private long viewCount;
 
     public Post(Long id, String title, String content, Category category, String author) {
 
@@ -68,7 +71,15 @@ public class Post {
 
     private void validateNotBlank(String value, String fieldName) {
         if(value == null || value.isBlank()){
-            throw new IllegalArgumentException(fieldName + "은(는) 비어있을 수 없습니다.");
+            throw new InvalidPostException(fieldName + "은(는) 비어있을 수 없습니다.");
         }
+    }
+
+    public long getViewCount() {
+        return viewCount;
+    }
+
+    public void increaseViewCount() {
+        ++viewCount;
     }
 }
