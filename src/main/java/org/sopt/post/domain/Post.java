@@ -1,19 +1,26 @@
 package org.sopt.post.domain;
 
+import jakarta.persistence.*;
 import org.sopt.post.exception.InvalidPostException;
 
 import java.time.LocalDateTime;
 
+@Entity
 public class Post {
-    private final Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String title;
     private String content;
-    private final Category category;
-    private final String author;
-    private final LocalDateTime createdAt;
+    @Enumerated(EnumType.STRING)
+    private Category category;
+    private String author;
+    private LocalDateTime createdAt;
     private long viewCount;
 
-    public Post(Long id, String title, String content, Category category, String author) {
+    protected Post() {}
+
+    public Post(String title, String content, Category category, String author) {
 
         validateNotBlank(title, "제목");
         validateNotBlank(content, "내용");
@@ -21,10 +28,10 @@ public class Post {
         this.title = title;
         this.content = content;
         this.category = category;
-        this.id = id;
         this.author = author;
         this.createdAt = LocalDateTime.now();
     }
+
     // 역할 부여
     public String getTitle() {
         return this.title;

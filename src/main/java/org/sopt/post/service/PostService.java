@@ -5,6 +5,7 @@ import org.sopt.post.domain.Post;
 import org.sopt.post.exception.PostNotFoundException;
 import org.sopt.post.repository.PostRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class PostService {
     }
 
     public Post createPost(String title, String content, Category category, String author) {
-        return postRepository.save(title, content, category,author);
+        return postRepository.save(new Post(title, content, category, author));
     }
 
     public List<Post> getAllPosts() {
@@ -28,11 +29,13 @@ public class PostService {
         return postRepository.findById(id).orElseThrow(() ->new PostNotFoundException());
     }
 
+    @Transactional
     public void updatePost (Long id, String title, String content) {
         Post post = getPost(id);
         post.update(title, content);
     }
 
+    @Transactional
     public void deletePost(Long id) {
         getPost(id);
         postRepository.deleteById(id);
@@ -41,5 +44,10 @@ public class PostService {
         Post post = getPost(id);
         post.increaseViewCount();
         return post;
+    }
+    public Post save(String title, String content, Category category, String author) {
+        Post nextPost = new Post(title, content, category, author);
+        postRepository.save(nextPost);
+        return nextPost;
     }
 }
