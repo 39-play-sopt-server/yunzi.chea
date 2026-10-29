@@ -1,11 +1,12 @@
 package org.sopt.post.controller;
 
 import org.sopt.post.domain.Post;
-import org.sopt.post.dto.ApiResponse;
-import org.sopt.post.dto.CreatePostRequest;
-import org.sopt.post.dto.PostResponse;
-import org.sopt.post.dto.UpdatePostRequest;
+import org.sopt.post.dto.*;
 import org.sopt.post.service.PostService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,18 +34,19 @@ public class PostController {
             @RequestBody CreatePostRequest request
     ) {
         Post post = postService.createPost(
-                request.title(), request.content(), request.category(), request.author());
+                request.title(), request.content(), request.category(), request.memberId());
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(ApiResponse.success(HttpStatus.CREATED, "게시글이 작성되었습니다.", PostResponse.from(post)));
     }
 
     @GetMapping
-    public ApiResponse<List<PostResponse>> getPostList() {
-        List<PostResponse> posts = postService.getAllPosts().stream()
-                .map(PostResponse::from)
-                .toList();
-        return ApiResponse.success(HttpStatus.OK,"게시글 목록 조회 성공", posts);
+    public ApiResponse<PageResponse<PostResponse>> getPostList(
+            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        Page<PostResponse> posts = postService.getAllPosts(pageable)
+                .map(PostResponse::from);
+        return ApiResponse.success(HttpStatus.OK,"게시글 목록 조회 성공", PageResponse.from(posts));
     }
 
     @GetMapping(path = "/{postId}")
