@@ -19,6 +19,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     void deleteById(Long id);
 
+    boolean existsByMemberId(Long memberId);
+
     // 게시글을 담기.
     // private final Map<Long,Post> posts = new LinkedHashMap<>();
     // private long nextId = 0;

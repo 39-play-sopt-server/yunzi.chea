@@ -1,12 +1,12 @@
 package org.sopt.post.domain;
 
 import jakarta.persistence.*;
+import org.sopt.common.BaseEntity;
+import org.sopt.member.domain.Member;
 import org.sopt.post.exception.InvalidPostException;
 
-import java.time.LocalDateTime;
-
 @Entity
-public class Post {
+public class Post extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -14,13 +14,14 @@ public class Post {
     private String content;
     @Enumerated(EnumType.STRING)
     private Category category;
-    private String author;
-    private LocalDateTime createdAt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
     private long viewCount;
 
     protected Post() {}
 
-    public Post(String title, String content, Category category, String author) {
+    public Post(String title, String content, Category category,Member member) {
 
         validateNotBlank(title, "제목");
         validateNotBlank(content, "내용");
@@ -28,8 +29,7 @@ public class Post {
         this.title = title;
         this.content = content;
         this.category = category;
-        this.author = author;
-        this.createdAt = LocalDateTime.now();
+        this.member = member;
     }
 
     // 역할 부여
@@ -68,12 +68,8 @@ public class Post {
         return id;
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    public Member getMember() {
+        return member;
     }
 
     private void validateNotBlank(String value, String fieldName) {
