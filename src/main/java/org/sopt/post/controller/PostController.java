@@ -42,7 +42,7 @@ public class PostController {
 
     @GetMapping
     public ApiResponse<PageResponse<PostResponse>> getPostList(
-            @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable
+            @PageableDefault(size = 10, sort = {"createdAt", "id"}, direction = Sort.Direction.DESC) Pageable pageable
     ) {
         Page<PostResponse> posts = postService.getAllPosts(pageable)
                 .map(PostResponse::from);
