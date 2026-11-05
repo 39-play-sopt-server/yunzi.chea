@@ -47,14 +47,11 @@ public class PostService {
         getPost(id);
         postRepository.deleteById(id);
     }
+
+    @Transactional
     public Post readPost(Long id) {
-        Post post = getPost(id);
-        post.increaseViewCount();
-        return post;
+        postRepository.increaseViewCount(id);
+        return getPost(id);
     }
-    public Post save(String title, String content, Category category, Member member) {
-        Post nextPost = new Post(title, content, category, member);
-        postRepository.save(nextPost);
-        return nextPost;
-    }
+
 }

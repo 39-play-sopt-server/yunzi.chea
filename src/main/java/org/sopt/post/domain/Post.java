@@ -82,7 +82,4 @@ public class Post extends BaseEntity {
         return viewCount;
     }
 
-    public void increaseViewCount() {
-        ++viewCount;
-    }
 }
