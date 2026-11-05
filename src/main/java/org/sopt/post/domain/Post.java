@@ -10,9 +10,12 @@ public class Post extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String title;
+    @Column(nullable = false)
     private String content;
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Category category;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id", nullable = false)
@@ -25,6 +28,8 @@ public class Post extends BaseEntity {
 
         validateNotBlank(title, "제목");
         validateNotBlank(content, "내용");
+        validateNotNull(category, "카테고리");
+        validateNotNull(member, "회원");
 
         this.title = title;
         this.content = content;
@@ -70,6 +75,12 @@ public class Post extends BaseEntity {
 
     public Member getMember() {
         return member;
+    }
+
+    private void validateNotNull(Object value, String fieldName) {
+        if (value == null) {
+            throw new InvalidPostException(fieldName + "은(는) 필수입니다.");
+        }
     }
 
     private void validateNotBlank(String value, String fieldName) {
