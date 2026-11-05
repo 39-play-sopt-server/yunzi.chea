@@ -83,7 +83,7 @@ public class PostView {
         System.out.println("제목: " + post.getTitle());
         System.out.println("콘텐츠: " + post.getContent());
         System.out.println("카테고리: " + post.getCategory().getLabel());
-        System.out.println("작성자: " + post.getAuthor());
+        System.out.println("작성자: " + post.getMember().getName());
         System.out.println("작성일: " + post.getCreatedAt());
     }
 }

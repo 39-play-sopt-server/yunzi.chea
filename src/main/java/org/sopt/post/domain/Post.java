@@ -1,35 +1,40 @@
 package org.sopt.post.domain;
 
 import jakarta.persistence.*;
+import org.sopt.common.BaseEntity;
+import org.sopt.member.domain.Member;
 import org.sopt.post.exception.InvalidPostException;
 
-import java.time.LocalDateTime;
-
 @Entity
-public class Post {
+public class Post extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
     private String title;
+    @Column(nullable = false)
     private String content;
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Category category;
-    private String author;
-    private LocalDateTime createdAt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
     private long viewCount;
 
     protected Post() {}
 
-    public Post(String title, String content, Category category, String author) {
+    public Post(String title, String content, Category category,Member member) {
 
         validateNotBlank(title, "제목");
         validateNotBlank(content, "내용");
+        validateNotNull(category, "카테고리");
+        validateNotNull(member, "회원");
 
         this.title = title;
         this.content = content;
         this.category = category;
-        this.author = author;
-        this.createdAt = LocalDateTime.now();
+        this.member = member;
     }
 
     // 역할 부여
@@ -68,12 +73,14 @@ public class Post {
         return id;
     }
 
-    public String getAuthor() {
-        return author;
+    public Member getMember() {
+        return member;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+    private void validateNotNull(Object value, String fieldName) {
+        if (value == null) {
+            throw new InvalidPostException(fieldName + "은(는) 필수입니다.");
+        }
     }
 
     private void validateNotBlank(String value, String fieldName) {
@@ -86,7 +93,4 @@ public class Post {
         return viewCount;
     }
 
-    public void increaseViewCount() {
-        ++viewCount;
-    }
 }

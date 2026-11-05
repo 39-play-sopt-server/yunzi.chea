@@ -10,7 +10,7 @@ public record PostResponse(
         String title,
         String content,
         Category category,
-        String author,
+        String authorName,
         LocalDateTime createdAt,
         long viewCount
 ) {
@@ -20,7 +20,7 @@ public record PostResponse(
                 post.getTitle(),
                 post.getContent(),
                 post.getCategory(),
-                post.getAuthor(),
+                post.getMember().getName(),
                 post.getCreatedAt(),
                 post.getViewCount()
         );
