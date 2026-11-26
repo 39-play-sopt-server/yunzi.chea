@@ -1,4 +1,4 @@
 package org.sopt.member.dto;
 
-public class LoginResult {
+public record LoginResult(String accessToken, String refreshToken) {
 }

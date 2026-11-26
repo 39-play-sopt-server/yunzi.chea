@@ -1,4 +1,3 @@
 package org.sopt.post.dto;
 
-public record LoginRequest() {
-}
+public record LoginRequest(String email, String password) {}

@@ -18,15 +18,26 @@ public class Member extends BaseEntity {
     @Column(name = "member_id")
     private Long id;
 
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
     @Column(nullable = false, length = maxLength)
     private String name;
 
     protected Member() {}
 
-    public Member(String name) {
+    public Member(String name,String email, String password) {
         validateNotBlank(name, "이름");
         validateMaxLength(name, "이름");
+        validateNotBlank(email, "이메일");
+        validateNotBlank(password, "비밀번호");
+
         this.name = name;
+        this.email = email;
+        this.password = password;
     }
 
     private void validateNotBlank(String value, String fieldName) {
@@ -47,5 +58,13 @@ public class Member extends BaseEntity {
 
     public String getName() {
         return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }
