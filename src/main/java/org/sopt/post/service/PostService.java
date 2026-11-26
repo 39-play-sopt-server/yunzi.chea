@@ -4,6 +4,7 @@ import org.sopt.member.domain.Member;
 import org.sopt.member.service.MemberService;
 import org.sopt.post.domain.Category;
 import org.sopt.post.domain.Post;
+import org.sopt.post.exception.PostForbiddenException;
 import org.sopt.post.exception.PostNotFoundException;
 import org.sopt.post.repository.PostRepository;
 import org.springframework.data.domain.Page;
@@ -37,15 +38,23 @@ public class PostService {
     }
 
     @Transactional
-    public void updatePost (Long id, String title, String content) {
+    public void updatePost (Long id, Long memberId, String title, String content) {
         Post post = getPost(id);
+        validateOwner(post, memberId);
         post.update(title, content);
     }
 
     @Transactional
-    public void deletePost(Long id) {
-        getPost(id);
+    public void deletePost(Long id, Long memberId) {
+        Post post = getPost(id);
+        validateOwner(post, memberId);
         postRepository.deleteById(id);
+    }
+
+    private void validateOwner(Post post, Long memberId) {
+        if (!post.getMember().getId().equals(memberId)) {
+            throw new PostForbiddenException();
+        }
     }
 
     @Transactional
