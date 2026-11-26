@@ -19,10 +19,6 @@ public class MemberService {
         this.postRepository = postRepository;
     }
 
-    public Member createMember(String name) {
-        return memberRepository.save(new Member(name));
-    }
-
     public Member getMember(Long id) {
         return memberRepository.findById(id).orElseThrow(() -> new MemberNotFoundException());
     }

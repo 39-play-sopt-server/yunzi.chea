@@ -9,6 +9,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,10 +32,11 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<PostResponse>> createPost(
+            @AuthenticationPrincipal Long memberId,
             @RequestBody CreatePostRequest request
     ) {
         Post post = postService.createPost(
-                request.title(), request.content(), request.category(), request.memberId());
+                request.title(), request.content(), request.category(), memberId);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(ApiResponse.success(HttpStatus.CREATED, "게시글이 작성되었습니다.", PostResponse.from(post)));
@@ -59,19 +61,21 @@ public class PostController {
 
     @PutMapping(path = "/{postId}")
     public ApiResponse<PostResponse> updatePost(
+            @AuthenticationPrincipal Long memberId,
             @PathVariable(name = "postId") Long postId,
             @RequestBody UpdatePostRequest request
     ) {
-        postService.updatePost(postId, request.title(), request.content());
+        postService.updatePost(postId, memberId, request.title(), request.content());
         Post post = postService.getPost(postId);
         return ApiResponse.success(HttpStatus.OK,"게시글이 수정되었습니다.", PostResponse.from(post));
     }
 
     @DeleteMapping(path = "/{postId}")
     public ResponseEntity<ApiResponse<Void>> deletePost(
+            @AuthenticationPrincipal Long memberId,
             @PathVariable(name = "postId") Long postId
     ) {
-        postService.deletePost(postId);
+        postService.deletePost(postId, memberId);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(ApiResponse.success(HttpStatus.OK,"삭제 완료",null));
